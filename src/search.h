@@ -1,10 +1,14 @@
 #ifndef SEARCH_H
 #define SEARCH_H
 
-#include <node.h>
-#include <Eigen/Dense>
+#include <iostream>
+#include <cmath>
+#include <vector>
 
-using namespace v8;
+#include <uv.h>
+#include <node_api.h>
+
+#include <Eigen/Dense>
 
 typedef Eigen::Map<Eigen::Matrix<float, -1, -1, Eigen::RowMajor> > MatrixChannel;
 
@@ -38,7 +42,7 @@ typedef struct {
 
 struct AsyncBaton {
     uv_work_t request;
-    Persistent<Function> callback;
+    napi_callback callback;
     Cargo *m1;
     Cargo *m2;
     unsigned int colorTolerance;
