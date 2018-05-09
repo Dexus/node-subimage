@@ -34,11 +34,15 @@ void        checkProps(napi_env env, napi_value obj) {
   checkSingleProp(env, obj, createString(env, "data"));
 }
 
-void        checkChannels(napi_env env, napi_value m1, napi_value m2) {
+void        checkChannels(napi_env env, napi_value m1, napi_value m2, napi_value m1Data, napi_value m2Data) {
   napi_value  m1ChannelsValue;
   napi_value  m2ChannelsValue;
+  /*napi_value  m1DataLengthValue;
+  napi_value  m2DataLengthValue;*/
   uint32_t    m1Channels;
   uint32_t    m2Channels;
+  /*uint32_t    m1DataLength;
+  uint32_t    m2DataLength;*/
   napi_status status;
 
   status = napi_get_property(env, m1, createString(env, "channels"), &m1ChannelsValue);
@@ -63,6 +67,28 @@ void        checkChannels(napi_env env, napi_value m1, napi_value m2) {
   if (abs(m1Channels - m2Channels) > 1) {
     napi_throw_error(env, nullptr, "Channel mismatch.");
   }
+  /*status = napi_get_property(env, m1Data, createString(env, "length"), &m1DataLengthValue);
+  if (status != napi_ok) {
+    napi_throw_error(env, nullptr, "Couldn't get m1Data length property.");
+  }
+  status = napi_get_value_uint32(env, m1DataLengthValue, &m1DataLength);
+  if (status != napi_ok) {
+    napi_throw_error(env, nullptr, "Couldn't get uint32 value.");
+  }
+  status = napi_get_property(env, m2Data, createString(env, "length"), &m2DataLengthValue);
+  if (status != napi_ok) {
+    napi_throw_error(env, nullptr, "Couldn't get m2Data length property.");
+  }
+  status = napi_get_value_uint32(env, m2DataLengthValue, &m2DataLength);
+  if (status != napi_ok) {
+    napi_throw_error(env, nullptr, "Couldn't get uint32 value.");
+  }
+  if (m1Channels != m1DataLength) {
+    napi_throw_error(env, nullptr, "Bad argument 'imgMatrix'.");
+  }
+  if (m2Channels != m2DataLength) {
+    napi_throw_error(env, nullptr, "Bad argument 'tplMatrix'.");
+  }*/
 }
 
 void        setMatrixData(napi_env env, napi_value obj, napi_value *matrix) {
@@ -95,9 +121,9 @@ napi_value  Search(napi_env env, napi_callback_info info) {
   m2 = argv[1];
   checkProps(env, m1);
   checkProps(env, m2);
-  checkChannels(env, m1, m2);
   setMatrixData(env, m1, &m1Data);
   setMatrixData(env, m2, &m2Data);
+  checkChannels(env, m1, m2, m1Data, m2Data);
   return m1Data;
 }
 
