@@ -1,1 +1,1 @@
-module.exports = require('./lib/imagesearch.js');
+module.exports = require('./lib/subimage.js');

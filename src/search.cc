@@ -131,58 +131,58 @@ void Search(const Nan::FunctionCallbackInfo<v8::Value> &args) {
     m2KDi = m2RDi = m2GDi = m2BDi = m2ADi = 0;
     
     if (m2Channels == 1 || m2Channels == 2) {
-        m1KL = node::Buffer::Length(m1K) * sizeof(float);
+        m1KL = node::Buffer::Length(m1K) / m1Channels  * sizeof(float);
         m1KD = node::Buffer::Data(m1K);
         m1KDi = (float *) malloc(m1KL);
         memcpy(m1KDi, &m1KD[0], m1KL);
         
-        m2KL = node::Buffer::Length(m2K) * sizeof(float);
+        m2KL = node::Buffer::Length(m2K) / m2Channels  * sizeof(float);
         m2KD = node::Buffer::Data(m2K);
         m2KDi = (float *) malloc(m2KL);
         memcpy(m2KDi, &m2KD[0], m2KL);
     }
     
     if (m2Channels == 3 || m2Channels == 4) {
-        m1RL = node::Buffer::Length(m1R) * sizeof(float);
+        m1RL = node::Buffer::Length(m1R) / m1Channels * sizeof(float);
         m1RD = node::Buffer::Data(m1R);
         m1RDi = (float *) malloc(m1RL);
         memcpy(m1RDi, &m1RD[0], m1RL);
         
-        m1GL = node::Buffer::Length(m1G) * sizeof(float);
+        m1GL = node::Buffer::Length(m1G) / m1Channels  * sizeof(float);
         m1GD = node::Buffer::Data(m1G);
         m1GDi = (float *) malloc(m1GL);
         memcpy(m1GDi, &m1GD[0], m1GL);
         
-        m1BL = node::Buffer::Length(m1B) * sizeof(float);
+        m1BL = node::Buffer::Length(m1B) / m1Channels  * sizeof(float);
         m1BD = node::Buffer::Data(m1B);
         m1BDi = (float *) malloc(m1BL);
         memcpy(m1BDi, &m1BD[0], m1BL);
         
-        m2RL = node::Buffer::Length(m2R) * sizeof(float);
+        m2RL = node::Buffer::Length(m2R) / m2Channels  * sizeof(float);
         m2RD = node::Buffer::Data(m2R);
         m2RDi = (float *) malloc(m2RL);
         memcpy(m2RDi, &m2RD[0], m2RL);
         
-        m2GL = node::Buffer::Length(m2G) * sizeof(float);
+        m2GL = node::Buffer::Length(m2G) / m2Channels  * sizeof(float);
         m2GD = node::Buffer::Data(m2G);
         m2GDi = (float *) malloc(m2GL);
         memcpy(m2GDi, &m2GD[0], m2GL);
         
-        m2BL = node::Buffer::Length(m2B) * sizeof(float);
+        m2BL = node::Buffer::Length(m2B) / m2Channels  * sizeof(float);
         m2BD = node::Buffer::Data(m2B);
         m2BDi = (float *) malloc(m2BL);
         memcpy(m2BDi, &m2BD[0], m2BL);
     }
     
     if (m1Channels == 2 || m1Channels == 4) {
-        m1AL = node::Buffer::Length(m1A) * sizeof(float);
+        m1AL = node::Buffer::Length(m1A) / m1Channels  * sizeof(float);
         m1AD = (char*) node::Buffer::Data(m1A);
         m1ADi = (float *) malloc(m1AL);
         memcpy(m1ADi, &m1AD[0], m1AL);
     }
     
     if (m2Channels == 2 || m2Channels == 4) {
-        m2AL = node::Buffer::Length(m2A) * sizeof(float);
+        m2AL = node::Buffer::Length(m2A) / m2Channels  * sizeof(float);
         m2AD = (char*) node::Buffer::Data(m2A);
         m2ADi = (float *) malloc(m2AL);
         memcpy(m2ADi, &m2AD[0], m2AL);
@@ -277,6 +277,8 @@ void searchDo(uv_work_t *request) {
 
 void searchAfter(uv_work_t *request) {
     v8::Isolate *isolate = Isolate::GetCurrent();
+    v8::HandleScope scope(isolate);
+
     AsyncBaton *baton = static_cast<AsyncBaton*>(request->data);
     
     Local<Array> out = Array::New(isolate, baton->result.size());

@@ -1,31 +1,36 @@
-# node-imagesearch
-
-[![Build Status](http://img.shields.io/travis/monai/node-imagesearch/develop.svg)](https://travis-ci.org/monai/node-imagesearch)
-[![NPM Version](http://img.shields.io/npm/v/imagesearch.svg)](https://www.npmjs.org/package/imagesearch)
+# node-subimage
 
 Fuzzy search for subimage within image. Tolerates color drift and bad pixels.
 
 ## Installation
 
-`npm install imagesearch`
+`npm install subimage`
+
+or
+
+`yarn add subimage`
 
 ## How to use
 
 ``` js
-var pngparse = require('pngparse');
-var imagesearch = require('imagesearch');
+const fs = require('fs'),
+      subimage = require('subimage')
 
-pngparse.parseFile('image.png', function (error, image) {
-  pngparse.parseFile('template.png', function (error, template) {
-    imagesearch(image, template, function (error, results) {
-      console.log(results);
-    });
-  });
-})
+let image = fs.createReadStream('image.png'),
+    template = fs.createReadStream('template.png')
+
+image = await subimage.util.streamParse(image)
+template = await subimage.util.streamParse(template)
+
+let results = await subimage.search(image, template)
 ```
 ## API
 
-**imagesearch(image, template, [options], callback);**
+**search(image, template, [options])**
+
+**util.streamParse(fileStream)**
+
+**util.pngjsParse(pngjs)**
 
 ### image and template
 
@@ -61,8 +66,6 @@ For example, let's say we have a 2x2 pixel image with red background and blue pi
 <Buffer ff 00 00 ff 00 00 00 00 ff ff 00 00>
 ```
 
-For added convenience the image object is compatible with the object returned by [pngparse](https://www.npmjs.org/package/pngparse) module as shown in the usage example above. The structure of this image object is similar to [HTML5 Canvas ImageData](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) object.
-
 ### options
 
 Two options are supported:
@@ -74,9 +77,9 @@ Options `colorTolerance` and `pixelTolerance` can be used together.
 
 Option `colorTolerance` is combined for all color channels. For example, if `colorTolerance == 10`, then the difference for R channel can be 6, G - 4, and B should match exactly, for the pixel color to be treated as matching.
 
-### callback
+### result
 
-The callback function receives an array of result objects. If there were no matches of the subimage within the template, the result array will be empty. The result object has 3 properties: `x`, `y`, and `accuracy`. The later doesn't bear any strict meaning and is only used for ordinal comparison. The smaller the `accuracy` value, the more accurate the match between the template and the subimage is.
+The search function returns an array of result objects. If there were no matches of the subimage within the template, the result array will be empty. The result object has 3 properties: `x`, `y`, and `accuracy`. The later doesn't bear any strict meaning and is only used for ordinal comparison. The smaller the `accuracy` value, the more accurate the match between the template and the subimage is.
 
 Example:
 
@@ -87,11 +90,6 @@ Example:
 ## Under the hood
 
 Image pixel comparison requires a lot of steps of algebraic computation which spawns large loops of few small number operations for each step. JavaScript doesn't have native SIMD support, although there are signs of promising [initiatives](https://01.org/blogs/tlcounts/2014/bringing-simd-javascript) and the situation can change eventually. As of today, there's no other way to speed things up as to use native bindings to some algebra library that supports vectorization. Since the image data can be expressed as a matrix, [Eigen](http://eigen.tuxfamily.org/) C++ template library is used in this project.
-
-## Contribution
-
-- Various contributions and pull requests are welcome.
-- Addon code review and improvement from experienced C++ developers and mathematicians is especially welcome.
 
 ## License
 

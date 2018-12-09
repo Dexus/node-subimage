@@ -1,13 +1,16 @@
 {
-  "name": "imagesearch",
-  "version": "0.0.6",
+  "name": "subimage",
+  "version": "0.0.7",
   "description": "Fuzzy search for subimage within image",
   "main": "index.js",
   "devDependencies": {
-    "async": "^0.8.0",
-    "mocha": "^1.20.1",
-    "pngparse": "^2.0.1",
-    "sandboxed-module": "^1.0.1"
+    "eslint": "^5.7.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "pngjs": "^3.3.3"
   },
   "scripts": {
     "test": "mocha -R spec spec",
@@ -15,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:monai/node-imagesearch.git"
+    "url": "https://github.com/SlayerDF/node-subimage.git"
   },
   "keywords": [
     "image",
     "search",
     "cv"
   ],
-  "author": "monai",
+  "author": "SlayerDF",
   "license": "ISC",
   "gypfile": true,
   "dependencies": {
