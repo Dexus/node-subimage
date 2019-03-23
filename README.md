@@ -4,17 +4,17 @@ Fuzzy search for subimage within image. Tolerates color drift and bad pixels.
 
 ## Installation
 
-`npm install subimage`
+`npm install @ineentho/subimage`
 
 or
 
-`yarn add subimage`
+`yarn add @ineentho/subimage`
 
 ## How to use
 
 ``` js
 const fs = require('fs'),
-      subimage = require('subimage')
+      subimage = require('@ineentho/subimage')
 
 let image = fs.createReadStream('image.png'),
     template = fs.createReadStream('template.png')

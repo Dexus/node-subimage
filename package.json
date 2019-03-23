@@ -1,5 +1,5 @@
 {
-  "name": "subimage",
+  "name": "@ineentho/subimage",
   "version": "0.0.7",
   "description": "Fuzzy search for subimage within image",
   "main": "index.js",
